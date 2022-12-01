@@ -469,6 +469,7 @@
       style="cursor: pointer"
       @mouseover="getInfo"
       class="land"
+      @click="getData"
     >
       <title>{{ name }}</title>
     </path>
@@ -528,87 +529,48 @@ export default {
     return {
       name: "",
       id: "",
-      data: [
-        {
-          geo: "SI",
-          year: 2010,
-          value: 0.1401,
-        },
-        {
-          geo: "SI",
-          year: 2011,
-          value: 0.1441,
-        },
-        {
-          geo: "SI",
-          year: 2012,
-          value: 0.1542,
-        },
-        {
-          geo: "SI",
-          year: 2013,
-          value: 0.161,
-        },
-        {
-          geo: "SI",
-          year: 2014,
-          value: 0.163,
-        },
-        {
-          geo: "SI",
-          year: 2015,
-          value: 0.1589,
-        },
-        {
-          geo: "SI",
-          year: 2016,
-          value: 0.1618,
-        },
-        {
-          geo: "SI",
-          year: 2017,
-          value: 0.1609,
-        },
-        {
-          geo: "SI",
-          year: 2018,
-          value: 0.1613,
-        },
-        {
-          geo: "SI",
-          year: 2019,
-          value: 0.1634,
-        },
-        {
-          geo: "SI",
-          year: 2020,
-          value: 0.1448,
-        },
-        {
-          geo: "SI",
-          year: 2021,
-          value: 0.1662,
-        },
-      ],
+      responseData: [],
     };
   },
+  /*
   mounted() {
-    axios
-      .get("http://localhost:1337/prices", {
+    /*await axios
+      .get(`http://localhost:1337/electricityCountry/${id}/MSHH`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
         },
       })
-      .then((response) => (this.data = response));
-  },
+      .then((response) => {
+        this.responseData = response.data;
+      });
+    this.getAPIdata(this.id)
+  },*/
   methods: {
-    getData() {
-      console.log(this.data);
+    async getAPIdata(id) {
+      await axios
+        .get(`http://localhost:1337/electricityCountry/${id}/MSHH`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.responseData = response.data;
+        });
+    },
+    getData(e) {
+      const id = e.target.id;
+      this.getAPIdata(id);
+      for (const key in this.responseData) {
+        console.log(JSON.parse(JSON.stringify(this.responseData[key])));
+      }
+      //console.log(this.responseData);
     },
     getInfo(e) {
       this.name = e.target.id;
       //console.log("Name: " + e.target.name);
-      console.log("Data from API: " + this.data);
+      //console.log("Data from API: " + this.data);
     },
   },
 };
